@@ -15,3 +15,14 @@ export const AddEmployee = async (req:Request,res:Response) => {
             return res.status(500).json({err:'Internal Server Error'});
     }
 }
+
+//Remove Employee
+export const RemoveEmployee = async (req:Request,res:Response) => {
+    const {id} = req.params;
+    try {
+        const employee = await Employee.findByIdAndDelete(id);
+        return employee ? res.status(200).json({deleted:'Employee Deleted '}) : res.status(404).json({error:'Employee Not Found !'})
+    } catch (error) {
+        return res.status(500).json({error:'Server Error !'})
+    }
+}
