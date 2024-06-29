@@ -26,3 +26,26 @@ export const RemoveEmployee = async (req:Request,res:Response) => {
         return res.status(500).json({error:'Server Error !'})
     }
 }
+
+//Update Employee
+export const UpdateEmployee = async (req:Request,res:Response) =>{
+    try {
+        const {id}= req.params;
+        const {name,email,position,department,salary} = req.body;
+        const UpdateData = {
+            name,
+            email,
+            position,
+            department,
+            salary
+        }
+        const employee = await Employee.findByIdAndUpdate(id,UpdateData);
+        await employee?.save();
+        return employee ? res.status(200).json({message : 'Employee Updated'}) : res.status(404).json({error: 'Employee Not Found !'})
+    } catch (error) {
+        if ((error as any).code === 11000 /* mongodb error code for unique value */ ) {
+            return res.status(400).json({error : 'Email Already in Use'});
+        }
+            return res.status(500).json({err:'Internal Server Error'});
+    }
+ }
